@@ -31,7 +31,7 @@ Créer un fichier `.env` à la racine du projet :
 INSEE_API_KEY=xxxxxxxxxxxxxxxx
 
 # Exemple d'utilisation:
-from src.insee-api-siene-v3-client import requete_multi_criteres
+from src.insee-api-sirene-v3-client import requete_multi_criteres
 
 df = requete_multi_criteres(
     endpoint="siret",
