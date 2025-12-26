@@ -12,15 +12,17 @@ via des requêtes unitaires et multi-critères, avec gestion :
 - Analyses sectorielles (NAF, périodes, dates de traitement)
 - Intégration dans un pipeline data ou un notebook d’analyse
 
-# Stack tehchnique:
+# Stack technique:
 - Python 3.10+
 - requests
 - pandas
 - python-dotenv
 
 # Installation:
-git clone https://github.com/TON_USER/sirene-api-client.git
+git clone https://github.com/TON_USER/insee-api-sirene-v3-client.git
+
 cd insee-api-sirene-v3-client
+
 pip install -r requirements.txt
 
 # Configuration:
@@ -29,7 +31,7 @@ Créer un fichier `.env` à la racine du projet :
 INSEE_API_KEY=xxxxxxxxxxxxxxxx
 
 # Exemple d'utilisation:
-from src.sirene_client import requete_multi_criteres
+from src.insee-api-siene-v3-client import requete_multi_criteres
 
 df = requete_multi_criteres(
     endpoint="siret",
@@ -43,7 +45,7 @@ print(df.shape)
 ✔ Requêtes unitaires (SIREN / SIRET)  
 ✔ Requêtes multi-critères (`q` libre avec AND / OR / parenthèses)  
 ✔ Normalisation des dates dans les requêtes  
-✔ Pagination par curseur INSEE  
+✔ Pagination par curseur
 ✔ Gestion des erreurs HTTP (401, 404, 429)  
 ✔ Résultats exploitables en pandas DataFrame  
 
