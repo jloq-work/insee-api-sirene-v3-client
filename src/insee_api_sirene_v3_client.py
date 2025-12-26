@@ -1,3 +1,6 @@
+
+from .config import API_BASE_URL, HEADERS
+
 # =========================
 # REQUÊTE UNITAIRE 
 # =========================
