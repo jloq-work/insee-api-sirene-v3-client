@@ -64,16 +64,18 @@ def requete_multi_criteres(
 ) -> Tuple[pd.DataFrame, dict]:
     """
     Requête multi-critères INSEE Sirene :
-    - pagination par curseur
+    - pagination par curseur (désactivée si inutile)
     - gestion 404 / 429
     - normalisation des dates
     - limite max_rows
     - retour DataFrame + header
     """
 
+    # plafond API
     if nombre > 1000:
-        nombre = 1000  # plafond API
+        nombre = 1000
 
+    # racine JSON selon endpoint
     if endpoint == "siret":
         racine = "etablissements"
     elif endpoint == "siren":
@@ -81,6 +83,7 @@ def requete_multi_criteres(
     else:
         raise ValueError("endpoint doit être 'siret' ou 'siren'")
 
+    # normalisation / validation de q
     if q:
         q = normaliser_dates_dans_q(q)
         valider_q(q)
@@ -88,6 +91,7 @@ def requete_multi_criteres(
     curseur = "*"
     all_results = []
     header_global = {}
+    first_page = True  # 👈 flag clé
 
     while True:
         params = {k: v for k, v in {
@@ -100,6 +104,7 @@ def requete_multi_criteres(
 
         url = f"{API_BASE_URL}/{endpoint}"
 
+        # retry sur 429
         for _ in range(max_retries):
             response = requests.get(
                 url,
@@ -119,16 +124,28 @@ def requete_multi_criteres(
 
         response.raise_for_status()
         data = response.json()
-        header_global = data.get("header", {})
+
+        header = data.get("header", {})
+        header_global = header
 
         batch = data.get(racine, [])
         all_results.extend(batch)
 
+        total = header.get("total", 0)
+
+        # ✅ CAS CRITIQUE : une seule page → PAS de pagination
+        if first_page and total <= nombre:
+            break
+
+        first_page = False
+
+        # limite max_rows
         if max_rows and len(all_results) >= max_rows:
             all_results = all_results[:max_rows]
             break
 
-        curseur = header_global.get("curseurSuivant")
+        # pagination normale
+        curseur = header.get("curseurSuivant")
         if not curseur:
             break
 
