@@ -61,7 +61,7 @@ def requete_multi_criteres(
     max_rows: Optional[int] = None,
     retry_delay: float = 1.0,
     max_retries: int = 5
-) -> Tuple[pd.DataFrame, dict]:
+) -> tuple[pd.DataFrame, dict]:
     """
     Requête multi-critères INSEE Sirene :
     - pagination par curseur (désactivée si inutile)
